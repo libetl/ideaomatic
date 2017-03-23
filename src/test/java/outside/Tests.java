@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.time.*;
 import java.util.ArrayList;
 
+import static org.junit.Assert.fail;
 import static org.toilelibre.libe.pol.Pol.*;
 import static org.toilelibre.libe.pol.Pol.InvocationHelper._do;
 
@@ -51,6 +52,16 @@ public class Tests {
     public void fourArgsCall () {
         use(the(text("a"))).alongWith(the(number(1))).and(somethingTrue()).and(some(new byte[]{0, 1, 0}))
                 .to(this::method).andUseTheResult().to(_do(System.out::println));
+    }
+
+    @Test
+    public void replaceIfIsEmptyListByIfListIsEmpty () {
+        if(_a(new ArrayList<>()).isNotEmpty()) {
+            fail();
+        }
+        if((a(newList())).with(text("An element")).isEmpty()) {
+            fail();
+        }
     }
 
 

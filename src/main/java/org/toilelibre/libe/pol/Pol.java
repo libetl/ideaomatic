@@ -1,5 +1,6 @@
 package org.toilelibre.libe.pol;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -63,7 +64,7 @@ public class Pol {
         }
     }
 
-    public static class DataHolder<T> implements SomeLanguageElements<DataHolder<T>>, ResultElements<T> {
+    public static class DataHolder<T> implements SomeLanguageElements<DataHolder<T>>, ResultLanguageElements<T> {
 
         private final T result;
 
@@ -217,7 +218,7 @@ public class Pol {
         }
     }
 
-    public static class CollectionHandler<T extends Collection<U>, U> implements SomeLanguageElements<CollectionHandler<T, U>>, ResultElements<Collection<U>> {
+    public static class CollectionHandler<T extends Collection<U>, U> implements SomeLanguageElements<CollectionHandler<T, U>>, ResultLanguageElements<Collection<U>> {
         private final T collection;
 
         public CollectionHandler(T collection) {
@@ -227,6 +228,10 @@ public class Pol {
         public CollectionHandler<T, U> alsoAdd(U element) {
             collection.add(element);
             return this;
+        }
+
+        public CollectionHandler<T, U> with(U element) {
+            return alsoAdd(element);
         }
 
         public InvocationHelper<T> useThatAll () {
@@ -240,6 +245,18 @@ public class Pol {
         @Override
         public Collection<U> value() {
             return unmodifiableCollection(collection);
+        }
+
+        public boolean isEmpty() {
+            return this.collection.isEmpty();
+        }
+
+        public boolean isNotEmpty() {
+            return !this.collection.isEmpty();
+        }
+
+        public boolean hasSize(int number) {
+            return this.collection.size() == number;
         }
     }
 
@@ -266,7 +283,7 @@ public class Pol {
         }
     }
 
-    public interface ResultElements<T> {
+    public interface ResultLanguageElements<T> {
         T value();
 
         default T ok () {
@@ -295,7 +312,6 @@ public class Pol {
     public static <T> T _this (T t) {
         return t;
     }
-
 
     public static <T> T that (T t) {
         return t;
@@ -333,8 +349,15 @@ public class Pol {
         return new InvocationHelper<T>(data);
     }
 
+    public static <T, U extends Collection<T>> CollectionHandler<U, T> _a (U theCollection) {
+        return new CollectionHandler<>(theCollection);
+    }
+    public static <T, U extends Collection<T>> CollectionHandler<U, T> newList () {
+        return new CollectionHandler<>((U)new ArrayList<T>());
+    }
+
     public static <T> ElementAdder<T> add (T element) {
         return new ElementAdder<>(element);
-
     }
+
 }
