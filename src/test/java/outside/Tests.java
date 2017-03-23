@@ -62,7 +62,7 @@ public class Tests {
         if((a(newList())).with(some(text("An element"))).isEmpty()) {
             fail();
         }
-        if((a(newListOf(String.class))).with(some(text("An element"))).doesNotContain("An element")) {
+        if((a(newListOf(TEXTS))).with(some(text("An element"))).doesNotContain("An element")) {
             fail();
         }
     }

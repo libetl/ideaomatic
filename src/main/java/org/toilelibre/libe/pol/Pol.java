@@ -14,6 +14,9 @@ import static java.util.Collections.unmodifiableCollection;
 
 public class Pol {
 
+    public static final Class<String> TEXTS = String.class;
+    public static final Class<Number> NUMBERS = Number.class;
+
     @FunctionalInterface
     public interface QuadriFunction<T, U, V, W, R> {
         R apply(T t, U u, V v, W w);
