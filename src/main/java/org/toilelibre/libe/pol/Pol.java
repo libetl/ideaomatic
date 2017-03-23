@@ -258,6 +258,14 @@ public class Pol {
         public boolean hasSize(int number) {
             return this.collection.size() == number;
         }
+
+        public boolean contains(U element) {
+            return this.collection.contains(element);
+        }
+
+        public boolean doesNotContain(U element) {
+            return !this.contains(element);
+        }
     }
 
     public static class Do {
@@ -354,6 +362,9 @@ public class Pol {
     }
     public static <T, U extends Collection<T>> CollectionHandler<U, T> newList () {
         return new CollectionHandler<>((U)new ArrayList<T>());
+    }
+    public static <T, U extends Collection<T>> CollectionHandler<U, T> newListOf (Class<T> clazz) {
+        return newList();
     }
 
     public static <T> ElementAdder<T> add (T element) {
