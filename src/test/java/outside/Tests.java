@@ -59,7 +59,7 @@ public class Tests {
         if(_a(new ArrayList<>()).isNotEmpty()) {
             fail();
         }
-        if((a(newList())).with(text("An element")).isEmpty()) {
+        if((a(newList())).with(some(text("An element"))).isEmpty()) {
             fail();
         }
     }
