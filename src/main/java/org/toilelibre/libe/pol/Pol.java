@@ -176,8 +176,8 @@ public class Pol {
         public <V> TriInvocationHelper<T, U, V> alongWith (V aThirdData) {
             return and(aThirdData);
         }
-        public <V> TriInvocationHelper<T, U, V> and (V thirdData) {
-            return new TriInvocationHelper<>(data, secondData, thirdData);
+        public <V> TriInvocationHelper<T, U, V> and (V aThirdData) {
+            return new TriInvocationHelper<>(data, secondData, aThirdData);
         }
     }
 
