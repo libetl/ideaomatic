@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import java.time.*;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static org.junit.Assert.fail;
 import static org.toilelibre.libe.pol.Pol.*;
@@ -65,6 +67,12 @@ public class Tests {
         if((a(newListOf(TEXTS))).with(some(text(like("An element")))).doesNotContain("An element")) {
             fail();
         }
+    }
+
+    @Test
+    public void mergeTwoLists () {
+        Collection<String> mergedList = use(a(newListOf(TEXTS)).with((some(text(like("First List Element")))))).alongWith(a(newListOf(TEXTS)).with(some(text(like("Second List Element"))))).to(Do::merge).thatIsAll();
+        System.out.println(mergedList);
     }
 
 

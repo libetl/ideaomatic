@@ -8,6 +8,7 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Collections.unmodifiableCollection;
@@ -283,6 +284,10 @@ public class Pol {
 
         public static String join(String... s) {
             return String.join("", s);
+        }
+
+        public static <T extends Collection<U>, U> T merge(CollectionHandler<T, U> firstCollection, CollectionHandler<T, U> secondCollection) {
+            return (T)Stream.concat(firstCollection.thenDo(), secondCollection.thenDo()).collect(Collectors.toList());
         }
     }
 
