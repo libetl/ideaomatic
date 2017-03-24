@@ -147,11 +147,11 @@ public class Pol {
             return (data, secondData, thirdData) -> {call.accept(data, secondData, thirdData);return (R)Void.TYPE;};
         }
 
-        public <W> QuadriInvocationHelper<T, U, V, W> alongWith (W fourthData) {
-            return and(fourthData);
+        public <W> QuadriInvocationHelper<T, U, V, W> alongWith (W aFourthData) {
+            return and(aFourthData);
         }
-        public <W> QuadriInvocationHelper<T, U, V, W> and (W fourthData) {
-            return new QuadriInvocationHelper<>(data, secondData, thirdData, fourthData);
+        public <W> QuadriInvocationHelper<T, U, V, W> and (W aFourthData) {
+            return new QuadriInvocationHelper<>(data, secondData, thirdData, aFourthData);
         }
     }
 
@@ -173,8 +173,8 @@ public class Pol {
             return (data, secondData) -> {call.accept(data, secondData);return (R)Void.TYPE;};
         }
 
-        public <V> TriInvocationHelper<T, U, V> alongWith (V thirdData) {
-            return and(thirdData);
+        public <V> TriInvocationHelper<T, U, V> alongWith (V aThirdData) {
+            return and(aThirdData);
         }
         public <V> TriInvocationHelper<T, U, V> and (V thirdData) {
             return new TriInvocationHelper<>(data, secondData, thirdData);
@@ -199,11 +199,11 @@ public class Pol {
             return (data) -> {call.accept(data);return (R)Void.TYPE;};
         }
 
-        public <U> BiInvocationHelper<T, U> alongWith (U secondData) {
-            return and(secondData);
+        public <U> BiInvocationHelper<T, U> alongWith (U aSecondData) {
+            return and(aSecondData);
         }
-        public <U> BiInvocationHelper<T, U> and (U secondData) {
-            return new BiInvocationHelper<>(data, secondData);
+        public <U> BiInvocationHelper<T, U> and (U aSecondData) {
+            return new BiInvocationHelper<>(data, aSecondData);
         }
     }
 
@@ -213,15 +213,15 @@ public class Pol {
         public ElementAdder(T element) {
             this.element = element;
         }
-        public CollectionHandler<Collection<T>, T> to(Supplier<Collection<T>> collectionBuilder) {
-            Collection<T> collection = collectionBuilder.get();
+        public CollectionHandler<Collection<T>, T> to(Supplier<Collection<T>> thatCollection) {
+            Collection<T> collection = thatCollection.get();
             collection.add(element);
             return new CollectionHandler<>(collection);
         }
 
-        public CollectionHandler<Collection<T>, T> to(Collection<T> collection) {
-            collection.add(element);
-            return new CollectionHandler<>(collection);
+        public CollectionHandler<Collection<T>, T> to(Collection<T> thatCollection) {
+            thatCollection.add(element);
+            return new CollectionHandler<>(thatCollection);
         }
     }
 
@@ -232,13 +232,13 @@ public class Pol {
             this.collection = collection;
         }
 
-        public CollectionHandler<T, U> alsoAdd(U element) {
-            collection.add(element);
+        public CollectionHandler<T, U> alsoAdd(U thisOtherElement) {
+            collection.add(thisOtherElement);
             return this;
         }
 
-        public CollectionHandler<T, U> with(U element) {
-            return alsoAdd(element);
+        public CollectionHandler<T, U> with(U thisOtherElement) {
+            return alsoAdd(thisOtherElement);
         }
 
         public InvocationHelper<T> useThatAll () {
@@ -262,16 +262,16 @@ public class Pol {
             return !this.collection.isEmpty();
         }
 
-        public boolean hasSize(int number) {
-            return this.collection.size() == number;
+        public boolean hasSize(int ofExactly) {
+            return this.collection.size() == ofExactly;
         }
 
-        public boolean contains(U element) {
-            return this.collection.contains(element);
+        public boolean contains(U thisElement) {
+            return this.collection.contains(thisElement);
         }
 
-        public boolean doesNotContain(U element) {
-            return !this.contains(element);
+        public boolean doesNotContain(U thisElement) {
+            return !this.contains(thisElement);
         }
     }
 
@@ -316,60 +316,60 @@ public class Pol {
         }
     }
 
-    public static <T> T a (T t) {
-        return t;
+    public static <T> T a (T value) {
+        return value;
     }
 
-    public static <T> T the (T t) {
-        return t;
+    public static <T> T the (T value) {
+        return value;
     }
 
-    public static <T> T justCreated (T t) {
-        return t;
+    public static <T> T justCreated (T thingCalled) {
+        return thingCalled;
     }
 
-    public static <T> T _this (T t) {
-        return t;
+    public static <T> T _this (T value) {
+        return value;
     }
 
-    public static <T> T that (T t) {
-        return t;
+    public static <T> T that (T value) {
+        return value;
     }
 
-    public static <T> T one (T t) {
-        return t;
+    public static <T> T one (T value) {
+        return value;
     }
 
-    public static <T> T some (T t) {
-        return t;
+    public static <T> T some (T value) {
+        return value;
     }
 
-    public static <T> T value (T t) {
-        return t;
+    public static <T> T value (T whichIs) {
+        return whichIs;
     }
 
-    public static <T> T like (T t) {
-        return t;
+    public static <T> T like (T letsSay) {
+        return letsSay;
     }
-    public static <T> String text (T t) {
-        return (String)t;
-    }
-
-    public static <T> Number number (T t) {
-        return (Number) t;
+    public static <T> String text (T saying) {
+        return (String)saying;
     }
 
-    public static <T> InvocationHelper<T> use (T data) {
-        return new InvocationHelper<T>(data);
+    public static <T> Number number (T ofValue) {
+        return (Number) ofValue;
     }
 
-    public static <T, U extends Collection<T>> CollectionHandler<U, T> _a (U theCollection) {
-        return new CollectionHandler<>(theCollection);
+    public static <T> InvocationHelper<T> use (T that) {
+        return new InvocationHelper<T>(that);
+    }
+
+    public static <T, U extends Collection<T>> CollectionHandler<U, T> _a (U collection) {
+        return new CollectionHandler<>(collection);
     }
     public static <T, U extends Collection<T>> CollectionHandler<U, T> newList () {
         return new CollectionHandler<>((U)new ArrayList<T>());
     }
-    public static <T, U extends Collection<T>> CollectionHandler<U, T> newListOf (Class<T> clazz) {
+    public static <T, U extends Collection<T>> CollectionHandler<U, T> newListOf (Class<T> thisClass) {
         return newList();
     }
 
