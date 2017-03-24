@@ -71,7 +71,7 @@ public class Tests {
 
     @Test
     public void mergeTwoLists () {
-        Collection<String> mergedList = use(a(newListOf(TEXTS)).with((some(text(like("First List Element")))))).alongWith(a(newListOf(TEXTS)).with(some(text(like("Second List Element"))))).to(Do::merge).thatIsAll();
+        Collection<String> mergedList = use(a(newListOf(TEXTS)).with(some(text(like("First List Element"))))).alongWith(a(newListOf(TEXTS)).with(some(text(like("Second List Element"))))).to(Do::merge).thatIsAll();
         System.out.println(mergedList);
     }
 
