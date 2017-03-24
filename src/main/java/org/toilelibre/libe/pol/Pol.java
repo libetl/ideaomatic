@@ -15,6 +15,7 @@ import static java.util.Collections.unmodifiableCollection;
 public class Pol {
 
     public static final Class<String> TEXTS = String.class;
+    public static final Class<String> NAMES = String.class;
     public static final Class<Number> NUMBERS = Number.class;
 
     @FunctionalInterface
