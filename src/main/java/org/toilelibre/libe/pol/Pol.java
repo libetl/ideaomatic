@@ -17,6 +17,8 @@ public class Pol {
     public static final Class<String> TEXTS = String.class;
     public static final Class<String> NAMES = String.class;
     public static final Class<Number> NUMBERS = Number.class;
+    public static final boolean SOMETHING_TRUE = true;
+    public static final boolean SOMETHING_FALSE = false;
 
     @FunctionalInterface
     public interface QuadriFunction<T, U, V, W, R> {
@@ -337,18 +339,13 @@ public class Pol {
         return t;
     }
 
-    public static boolean somethingTrue () {
-        return true;
-    }
-
-    public static boolean somethingFalse () {
-        return false;
-    }
-
     public static <T> T value (T t) {
         return t;
     }
 
+    public static <T> String like (T t) {
+        return (String)t;
+    }
     public static <T> String text (T t) {
         return (String)t;
     }

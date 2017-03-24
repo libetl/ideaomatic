@@ -50,7 +50,7 @@ public class Tests {
 
     @Test
     public void fourArgsCall () {
-        use(the(text("a"))).alongWith(the(number(1))).and(somethingTrue()).and(some(new byte[]{0, 1, 0}))
+        use(the(text("a"))).alongWith(the(number(1))).and(SOMETHING_TRUE).and(some(new byte[]{0, 1, 0}))
                 .to(this::method).andUseTheResult().to(_do(System.out::println));
     }
 
@@ -62,7 +62,7 @@ public class Tests {
         if((a(newList())).with(some(text("An element"))).isEmpty()) {
             fail();
         }
-        if((a(newListOf(TEXTS))).with(some(text("An element"))).doesNotContain("An element")) {
+        if((a(newListOf(TEXTS))).with(some(text(like("An element")))).doesNotContain("An element")) {
             fail();
         }
     }
