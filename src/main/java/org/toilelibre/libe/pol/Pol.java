@@ -348,8 +348,8 @@ public class Pol {
         return t;
     }
 
-    public static <T> String like (T t) {
-        return (String)t;
+    public static <T> T like (T t) {
+        return t;
     }
     public static <T> String text (T t) {
         return (String)t;
