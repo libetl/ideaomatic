@@ -2,12 +2,9 @@ package org.toilelibre.libe.pol;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -17,7 +14,9 @@ public class Pol {
 
     public static final Class<String> TEXTS = String.class;
     public static final Class<String> NAMES = String.class;
+    public static final Class<Integer> NATURALS = Integer.class;
     public static final Class<Number> NUMBERS = Number.class;
+    public static final Class<List> LIST = List.class;
     public static final boolean SOMETHING_TRUE = true;
     public static final boolean SOMETHING_FALSE = false;
 
@@ -79,8 +78,8 @@ public class Pol {
             this.result = result;
         }
 
-        public InvocationHelper<T> andUseTheResult() {
-            return new InvocationHelper<T>(this.result);
+        public InvocationHelper<T> useTheResult() {
+            return new InvocationHelper<>(this.result);
         }
 
         public <R> DataHolder<R> become (Function<T, R> modifier) {
@@ -196,7 +195,27 @@ public class Pol {
         }
 
         public static <T, R> Function<T, R> _do(Consumer<T> call) {
-            return (data) -> {call.accept(data);return (R)Void.TYPE;};
+            return (data) -> {call.accept(data);return (R)data;};
+        }
+
+        public static <T, R> Function<T, R> silently(Consumer<T> call) {
+            return _do(call);
+        }
+
+        public static <T> T _for(T t) {
+            return t;
+        }
+
+        public static <T extends Function<U, R>, U, R> T someFunctionFor(Class<U> originTypeAs, Class<R> andTargetTypeAs, T withTheFollowingDefinition) {
+            return withTheFollowingDefinition;
+        }
+
+        public static <T extends Consumer<U>, U> T someFunctionFor(Class<U> originTypeAs, T withTheFollowingDefinition) {
+            return withTheFollowingDefinition;
+        }
+
+        public static <T extends List<U>, U> Class<T> someListOf(Class<U> originTypeAs) {
+            return (Class) List.class;
         }
 
         public <U> BiInvocationHelper<T, U> alongWith (U aSecondData) {
@@ -291,6 +310,61 @@ public class Pol {
         }
     }
 
+    public static class Looper<T> implements SomeLanguageElements<Looper<T>> {
+
+        private DataHolder<T> useThis;
+        private Function<T, T> function;
+        private Predicate<Integer> predicate;
+
+        public Looper(Function<T, T> function) {
+            this.function = function;
+        }
+
+        public Looper(DataHolder<T> useThis) {
+            this.useThis = useThis;
+        }
+
+        public Looper<T> on(T someDataCalled) {
+            this.useThis = new DataHolder<T>(someDataCalled);
+            return this;
+        }
+
+        public Looper<T> apply (Function<T, T> function) {
+            this.function = function;
+            return this;
+        }
+
+        public Looper<T> _for (final int exactly) {
+            this.predicate = i -> i > exactly;
+            return this;
+        }
+
+        public Looper<T> times() {
+            T that = useThis.value();
+            int i = 0;
+            while (!this.predicate.test(i)) {
+                that = function.apply(that);
+                i++;
+            }
+            this.useThis = new DataHolder<>(that);
+            return this;
+        }
+
+        public Looper<T> until(Predicate<T> weHave) {
+            T that = useThis.value();
+            while (!weHave.test(that)) {
+                that = function.apply(that);
+            }
+            this.useThis = new DataHolder<>(that);
+            return this;
+        }
+
+        public DataHolder<T> afterThat () {
+            return this.useThis;
+        }
+
+    }
+
     public interface SomeLanguageElements<T extends SomeLanguageElements> {
 
         default T and() {
@@ -351,6 +425,7 @@ public class Pol {
     public static <T> T like (T letsSay) {
         return letsSay;
     }
+
     public static <T> String text (T saying) {
         return (String)saying;
     }
@@ -359,8 +434,20 @@ public class Pol {
         return (Number) ofValue;
     }
 
+    public static <T> Integer natural (T number) {
+        return (Integer) number;
+    }
+
     public static <T> InvocationHelper<T> use (T that) {
-        return new InvocationHelper<T>(that);
+        return new InvocationHelper<>(that);
+    }
+
+    public static <T> DataHolder<T> with (T data) {
+        return new DataHolder<>(data);
+    }
+
+    public static <T> T weHave (T theResult) {
+        return theResult;
     }
 
     public static <T, U extends Collection<T>> CollectionHandler<U, T> _a (U collection) {
@@ -375,6 +462,18 @@ public class Pol {
 
     public static <T> ElementAdder<T> add (T element) {
         return new ElementAdder<>(element);
+    }
+
+    public static <T> Looper<T> andNow (DataHolder<T> useThis) {
+        return new Looper<>(useThis);
+    }
+
+    public static <T> Looper<T> applySilently (Consumer<T> theFunction) {
+        return new Looper<>(InvocationHelper._do(theFunction));
+    }
+
+    public static <T> Looper<T> apply (Function<T, T> theFunction) {
+        return new Looper<>(theFunction);
     }
 
 }
