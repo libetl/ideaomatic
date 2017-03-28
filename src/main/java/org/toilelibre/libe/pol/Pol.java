@@ -1,6 +1,7 @@
 package org.toilelibre.libe.pol;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -350,6 +351,11 @@ public class Pol {
             return this;
         }
 
+        public Looper<T> untilTheEndOfTheList() {
+            this.useThis = new DataHolder<>(function.apply(useThis.value()));
+            return this;
+        }
+
         public Looper<T> until(Predicate<T> weHave) {
             T that = useThis.value();
             while (!weHave.test(that)) {
@@ -446,8 +452,16 @@ public class Pol {
         return new DataHolder<>(data);
     }
 
+    public static <T> List<T> theList (T... containingExactly) {
+        return Arrays.asList(containingExactly);
+    }
+
     public static <T> T weHave (T theResult) {
         return theResult;
+    }
+
+    public static <U extends Collection<T>, V extends Collection<R>, T, R> Function<U, V> forEach (Function<T, R> elementInTheCollection) {
+        return collection -> (V)collection.stream().map(t -> elementInTheCollection.apply(t)).collect(Collectors.toList());
     }
 
     public static <T, U extends Collection<T>> CollectionHandler<U, T> _a (U collection) {

@@ -5,8 +5,12 @@ import org.junit.Test;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Random;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.fail;
 import static org.toilelibre.libe.pol.Pol.*;
 import static org.toilelibre.libe.pol.Pol.InvocationHelper.*;
@@ -94,6 +98,14 @@ public class Tests {
         applySilently(someFunctionFor(someListOf(NATURALS), list -> list.add(new Random().nextInt())))
                      .on(a(new ArrayList<>()))._for(40).times()
                         .and().afterThat().useTheResult().to(_do(System.out::println));
+
+        andNow(with(theList("Alpha", "Bravo", "Charlie", "Delta", "Echo")))
+                .apply(forEach(text -> text.substring(0, 1)))
+                .untilTheEndOfTheList().and()
+             .afterThat()
+                .useTheResult()
+                .to(_do(System.out::println));
+
     }
 
     public String method (String arg0, Number arg1, boolean arg2, byte[] arg3) {
