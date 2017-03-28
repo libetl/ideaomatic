@@ -2,18 +2,43 @@ package outside;
 
 import org.junit.Test;
 
-import java.time.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Random;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
 
-import static java.util.Arrays.asList;
 import static org.junit.Assert.fail;
-import static org.toilelibre.libe.pol.Pol.*;
-import static org.toilelibre.libe.pol.Pol.InvocationHelper.*;
+import static org.toilelibre.libe.pol.Pol.Do;
+import static org.toilelibre.libe.pol.Pol.InvocationHelper._do;
+import static org.toilelibre.libe.pol.Pol.InvocationHelper.someFunctionFor;
+import static org.toilelibre.libe.pol.Pol.InvocationHelper.someListOf;
+import static org.toilelibre.libe.pol.Pol.NATURALS;
+import static org.toilelibre.libe.pol.Pol.SOMETHING_TRUE;
+import static org.toilelibre.libe.pol.Pol.TEXTS;
+import static org.toilelibre.libe.pol.Pol._a;
+import static org.toilelibre.libe.pol.Pol.a;
+import static org.toilelibre.libe.pol.Pol.add;
+import static org.toilelibre.libe.pol.Pol.andNow;
+import static org.toilelibre.libe.pol.Pol.applySilently;
+import static org.toilelibre.libe.pol.Pol.forEach;
+import static org.toilelibre.libe.pol.Pol.like;
+import static org.toilelibre.libe.pol.Pol.natural;
+import static org.toilelibre.libe.pol.Pol.newList;
+import static org.toilelibre.libe.pol.Pol.newListOf;
+import static org.toilelibre.libe.pol.Pol.number;
+import static org.toilelibre.libe.pol.Pol.some;
+import static org.toilelibre.libe.pol.Pol.text;
+import static org.toilelibre.libe.pol.Pol.the;
+import static org.toilelibre.libe.pol.Pol.theList;
+import static org.toilelibre.libe.pol.Pol.use;
+import static org.toilelibre.libe.pol.Pol.value;
+import static org.toilelibre.libe.pol.Pol.weHave;
+import static org.toilelibre.libe.pol.Pol.with;
 
 public class Tests {
 
