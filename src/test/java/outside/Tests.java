@@ -126,7 +126,7 @@ public class Tests {
 
         andNow(with(theList("Alpha", "Bravo", "Charlie", "Delta", "Echo")))
                 .apply(forEach(text -> text.substring(0, 1)))
-                .untilTheEndOfTheList().and()
+                .forAllElements().and()
              .afterThat()
                 .useTheResult()
                 .to(_do(System.out::println));

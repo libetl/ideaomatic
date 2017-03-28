@@ -351,7 +351,7 @@ public class Pol {
             return this;
         }
 
-        public Looper<T> untilTheEndOfTheList() {
+        public Looper<T> forAllElements() {
             this.useThis = new DataHolder<>(function.apply(useThis.value()));
             return this;
         }
