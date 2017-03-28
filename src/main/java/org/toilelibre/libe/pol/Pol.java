@@ -5,7 +5,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -265,7 +270,7 @@ public class Pol {
             return new InvocationHelper<>(collection);
         }
 
-        public Stream<U> thenDo() {
+        public Stream<U> _do() {
             return collection.stream();
         }
 
@@ -293,6 +298,10 @@ public class Pol {
         public boolean doesNotContain(U thisElement) {
             return !this.contains(thisElement);
         }
+
+        public Looper<T> loop() {
+            return new Looper<>(new DataHolder<>(collection));
+        }
     }
 
     public static class Do {
@@ -307,7 +316,7 @@ public class Pol {
         }
 
         public static <T extends Collection<U>, U> T merge(CollectionHandler<T, U> firstCollection, CollectionHandler<T, U> secondCollection) {
-            return (T)Stream.concat(firstCollection.thenDo(), secondCollection.thenDo()).collect(Collectors.toList());
+            return (T)Stream.concat(firstCollection._do(), secondCollection._do()).collect(Collectors.toList());
         }
     }
 
@@ -448,14 +457,6 @@ public class Pol {
         return new InvocationHelper<>(that);
     }
 
-    public static <T> DataHolder<T> with (T data) {
-        return new DataHolder<>(data);
-    }
-
-    public static <T> List<T> theList (T... containingExactly) {
-        return Arrays.asList(containingExactly);
-    }
-
     public static <T> T weHave (T theResult) {
         return theResult;
     }
@@ -463,6 +464,19 @@ public class Pol {
     public static <U extends Collection<T>, V extends Collection<R>, T, R> Function<U, V> forEach (Function<T, R> elementInTheCollection) {
         return collection -> (V)collection.stream().map(t -> elementInTheCollection.apply(t)).collect(Collectors.toList());
     }
+
+    public static <T> List<T> theList (T... containingExactly) {
+        return Arrays.asList(containingExactly);
+    }
+
+    public static <T, U extends Collection<T>> CollectionHandler<U, T> withTheList (T... containingExactly) {
+        return new CollectionHandler(Arrays.asList(containingExactly));
+    }
+
+    public static <T> DataHolder<T> with (T data) {
+        return new DataHolder<>(data);
+    }
+
 
     public static <T, U extends Collection<T>> CollectionHandler<U, T> _a (U collection) {
         return new CollectionHandler<>(collection);

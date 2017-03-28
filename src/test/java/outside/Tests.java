@@ -39,12 +39,13 @@ import static org.toilelibre.libe.pol.Pol.use;
 import static org.toilelibre.libe.pol.Pol.value;
 import static org.toilelibre.libe.pol.Pol.weHave;
 import static org.toilelibre.libe.pol.Pol.with;
+import static org.toilelibre.libe.pol.Pol.withTheList;
 
 public class Tests {
 
     @Test
     public void simpleTest () {
-        use(text("Hello world")).to(_do(System.out::println));
+        use(some(text(like("Hello world")))).to(_do(System.out::println));
     }
 
     @Test
@@ -131,9 +132,13 @@ public class Tests {
                 .useTheResult()
                 .to(_do(System.out::println));
 
+        withTheList("A", "B", "C", "D", "E")
+                .loop().apply(forEach(x -> "" + x + x)).forAllElements()
+                .afterThat().useTheResult().to(_do(System.out::println));
+
     }
 
-    public String method (String arg0, Number arg1, boolean arg2, byte[] arg3) {
-        return arg0 + arg1 + arg2 + arg3;
+    private String method (String arg0, Number arg1, boolean arg2, byte[] arg3) {
+        return arg0 + arg1 + arg2 + new String(arg3);
     }
 }
