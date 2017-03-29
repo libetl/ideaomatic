@@ -1,5 +1,11 @@
 package org.toilelibre.libe.pol;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -302,6 +308,37 @@ public class Pol {
 
         public Looper<T> loop() {
             return new Looper<>(new DataHolder<>(collection));
+        }
+    }
+
+    public static class Get {
+
+        public static Year aYear(int value) {
+            return Year.of(value);
+        }
+
+        public static YearMonth aYearMonth(Year year, int value) {
+            return year.atMonth(value);
+        }
+
+        public static LocalDate aDate(YearMonth yearMonth, int value) {
+            return yearMonth.atDay(value);
+        }
+
+        public static LocalDateTime aDateTime(LocalDate localDate, Integer hours, Integer minutes) {
+            return aDateTime(localDate, hours, minutes, 0);
+        }
+
+        public static LocalDateTime aDateTime(LocalDate localDate, int hours, int minutes, int seconds) {
+            return aDateTime(localDate, hours, minutes, seconds, 0);
+        }
+
+        public static LocalDateTime aDateTime(LocalDate localDate, int hours, int minutes, int seconds, int nanoseconds) {
+            return localDate.atTime(hours, minutes, seconds, nanoseconds);
+        }
+
+        public static OffsetDateTime aDateTimeWithTimezone(LocalDateTime localDateTime, ZoneOffset zoneOffset) {
+            return localDateTime.atOffset(zoneOffset);
         }
     }
 

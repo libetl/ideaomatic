@@ -14,6 +14,7 @@ import java.util.Random;
 
 import static org.junit.Assert.fail;
 import static org.toilelibre.libe.pol.Pol.Do;
+import static org.toilelibre.libe.pol.Pol.Get;
 import static org.toilelibre.libe.pol.Pol.InvocationHelper.someFunctionFor;
 import static org.toilelibre.libe.pol.Pol.InvocationHelper.someListOf;
 import static org.toilelibre.libe.pol.Pol.NATURALS;
@@ -65,11 +66,11 @@ public class Tests {
     @Test
     public void buildLocalDateTimeWithAnotherFluentInterface () {
         OffsetDateTime offsetDateTime =
-                use(the(value(2008))).to(Year::of)
-                .and().useTheResult().alongWith(the(value(8))).to(Year::atMonth)
-                .and().useTheResult().alongWith(the(value(23))).to(YearMonth::atDay)
-                .and().useTheResult().alongWith(the(value(14))).and(the(value(25))).to(LocalDate::atTime)
-                .and().useTheResult().alongWith(the(ZoneOffset.ofHours(2))).to(LocalDateTime::atOffset).ok();
+                use(the(value(2008))).to(Get::aYear)
+                .and().useTheResult().alongWith(the(value(8))).to(Get::aYearMonth)
+                .and().useTheResult().alongWith(the(value(23))).to(Get::aDate)
+                .and().useTheResult().alongWith(the(value(14))).and(the(value(25))).to(Get::aDateTime)
+                .and().useTheResult().alongWith(the(ZoneOffset.ofHours(2))).to(Get::aDateTimeWithTimezone).ok();
         System.out.println(offsetDateTime);
     }
 
