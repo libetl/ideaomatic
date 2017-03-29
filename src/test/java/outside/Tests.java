@@ -137,6 +137,12 @@ public class Tests {
 
     }
 
+    @Test
+    public void intersection () {
+        use(theList("A1", "A2", "C3", "C4")).alongWith(theList("B1", "B2", "C3", "C4")).to(Do::intersection)
+                .useTheResult().to(Do::println);
+    }
+
     private String method (String arg0, Number arg1, boolean arg2, byte[] arg3) {
         return arg0 + arg1 + arg2 + new String(arg3);
     }

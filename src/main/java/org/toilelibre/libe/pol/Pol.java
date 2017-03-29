@@ -3,6 +3,7 @@ package org.toilelibre.libe.pol;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -322,6 +323,10 @@ public class Pol {
         public static <T> Void println(T t) {
             System.out.println(t);
             return null;
+        }
+
+        public static <T> Collection<T> intersection(Collection<T> coll1, Collection<T> coll2) {
+            return coll1.stream().filter(coll2::contains).collect(Collectors.toList());
         }
     }
 
