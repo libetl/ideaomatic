@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.toile-libre.libe</groupId>
-    <artifactId>pol</artifactId>
+    <artifactId>ideaomatic</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>pol</name>
-    <description>Power of language : write code in english language</description>
-    <url>https://github.com/libetl/curl</url>
+    <description>ideaomatic : write code in english language</description>
+    <url>https://github.com/libetl/ideaomatic</url>
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
@@ -21,9 +21,9 @@
         </developer>
     </developers>
     <scm>
-        <connection>scm:git:git@github.com:libetl/curl.git</connection>
-        <developerConnection>scm:git:git@github.com:libetl/curl.git</developerConnection>
-        <url>git@github.com:libetl/curl.git</url>
+        <connection>scm:git:git@github.com:libetl/ideaomatic.git</connection>
+        <developerConnection>scm:git:git@github.com:libetl/ideaomatic.git</developerConnection>
+        <url>git@github.com:libetl/ideaomatic.git</url>
         <tag>${project.version}</tag>
     </scm>
     <distributionManagement>

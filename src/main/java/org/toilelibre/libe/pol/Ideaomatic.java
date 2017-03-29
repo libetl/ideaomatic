@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 
 import static java.util.Collections.unmodifiableCollection;
 
-public class Pol {
+public class Ideaomatic {
 
     public static final Class<String> TEXTS = String.class;
     public static final Class<String> NAMES = String.class;
