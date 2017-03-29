@@ -45,14 +45,14 @@ public class Tests {
 
     @Test
     public void simpleTest () {
-        use(some(text(like("Hello world")))).to(_do(System.out::println));
+        use(some(text(like("Hello world")))).to(Do::println);
     }
 
     @Test
     public void formatText () {
         use(the(text("This is a format involving a text %s and a number %d")))
                 .alongWith(the(text("test"))).and(a(number(2))).to(String::format).and().useTheResult().to(
-                        _do(System.out::println));
+                        Do::println);
     }
 
     @Test
@@ -60,7 +60,7 @@ public class Tests {
         add(a("First Element")).to(a(new ArrayList<>()))
                 .and().alsoAdd(a("Second Element")).then()
                 .useThatAll().alongWith(some("Third Element")).to(Do::concatenation)
-                .and().useTheResult().to(_do(System.out::println));
+                .and().useTheResult().to(Do::println);
     }
 
     @Test
@@ -77,13 +77,13 @@ public class Tests {
     @Test
     public void joinStringValues () {
         use(a("This text")).alongWith(a(" will be displayed ")).and(a("at once."))
-                .to(Do::join).and().useTheResult().to(_do(System.out::println));
+                .to(Do::join).and().useTheResult().to(Do::println);
     }
 
     @Test
     public void fourArgsCall () {
         use(the(text("a"))).alongWith(the(number(1))).and(SOMETHING_TRUE).and(some(new byte[]{0, 1, 0}))
-                .to(this::method).and().useTheResult().to(_do(System.out::println));
+                .to(this::method).and().useTheResult().to(Do::println);
     }
 
     @Test
@@ -112,29 +112,29 @@ public class Tests {
                 .until(weHave(text -> text.length() > 50))
             .afterThat()
                 .useTheResult()
-                .to(_do(System.out::println));
+                .to(Do::println);
 
         andNow(with(the(natural(0))))
                 .apply(natural -> natural + 1)
                 .until(weHave(natural -> natural > 50))
             .afterThat()
                 .useTheResult()
-                .to(_do(System.out::println));
+                .to(Do::println);
 
         applySilently(someFunctionFor(someListOf(NATURALS), list -> list.add(new Random().nextInt())))
                      .on(a(new ArrayList<>()))._for(40).times()
-                        .and().afterThat().useTheResult().to(_do(System.out::println));
+                        .and().afterThat().useTheResult().to(Do::println);
 
         andNow(with(theList("Alpha", "Bravo", "Charlie", "Delta", "Echo")))
                 .apply(forEach(text -> text.substring(0, 1)))
                 .forAllElements().and()
              .afterThat()
                 .useTheResult()
-                .to(_do(System.out::println));
+                .to(Do::println);
 
         withTheList("A", "B", "C", "D", "E")
                 .loop().apply(forEach(x -> "" + x + x)).forAllElements()
-                .afterThat().useTheResult().to(_do(System.out::println));
+                .afterThat().useTheResult().to(Do::println);
 
     }
 

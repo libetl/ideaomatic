@@ -318,6 +318,11 @@ public class Pol {
         public static <T extends Collection<U>, U> T merge(CollectionHandler<T, U> firstCollection, CollectionHandler<T, U> secondCollection) {
             return (T)Stream.concat(firstCollection._do(), secondCollection._do()).collect(Collectors.toList());
         }
+
+        public static <T> Void println(T t) {
+            System.out.println(t);
+            return null;
+        }
     }
 
     public static class Looper<T> implements SomeLanguageElements<Looper<T>> {
