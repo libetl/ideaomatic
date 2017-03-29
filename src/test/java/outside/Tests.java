@@ -14,7 +14,6 @@ import java.util.Random;
 
 import static org.junit.Assert.fail;
 import static org.toilelibre.libe.pol.Pol.Do;
-import static org.toilelibre.libe.pol.Pol.InvocationHelper._do;
 import static org.toilelibre.libe.pol.Pol.InvocationHelper.someFunctionFor;
 import static org.toilelibre.libe.pol.Pol.InvocationHelper.someListOf;
 import static org.toilelibre.libe.pol.Pol.NATURALS;
