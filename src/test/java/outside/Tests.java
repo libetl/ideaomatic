@@ -126,13 +126,13 @@ public class Tests {
 
         andNow(with(theList("Alpha", "Bravo", "Charlie", "Delta", "Echo")))
                 .apply(forEach(text -> text.substring(0, 1)))
-                .forAllElements().and()
+                .onEveryElement().and()
              .afterThat()
                 .useTheResult()
                 .to(Do::println);
 
         withTheList("A", "B", "C", "D", "E")
-                .loop().apply(forEach(x -> "" + x + x)).forAllElements()
+                .loop().apply(forEach(x -> "" + x + x)).onEveryElement()
                 .afterThat().useTheResult().to(Do::println);
 
     }

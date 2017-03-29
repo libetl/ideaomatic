@@ -370,7 +370,7 @@ public class Pol {
             return this;
         }
 
-        public Looper<T> forAllElements() {
+        public Looper<T> onEveryElement() {
             this.useThis = new DataHolder<>(function.apply(useThis.value()));
             return this;
         }
