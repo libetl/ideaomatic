@@ -206,6 +206,9 @@ public class Ideaomatic {
             return new DataHolder<>(call.apply(data));
         }
 
+        public static <T, R> Function<T, R> formA(Consumer<T> call) {
+            return _do(call);
+        }
         public static <T, R> Function<T, R> _do(Consumer<T> call) {
             return (data) -> {call.accept(data);return (R)data;};
         }
