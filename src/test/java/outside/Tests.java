@@ -93,6 +93,9 @@ public class Tests {
         if((a(newListOf(TEXTS))).with(some(text(like("An element")))).doesNotContain("An element")) {
             fail();
         }
+        if(_a(text(like("foo"))).isNotIncludedIn(theList("foo", "bar"))){
+            fail();
+        }
     }
 
     @Test

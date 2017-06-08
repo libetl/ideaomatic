@@ -20,6 +20,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.Collections.singleton;
+import static java.util.Collections.singletonList;
 import static java.util.Collections.unmodifiableCollection;
 
 public class Ideaomatic {
@@ -315,6 +317,14 @@ public class Ideaomatic {
         public Looper<T> loop() {
             return new Looper<>(new DataHolder<>(collection));
         }
+
+        public <V> boolean isIncludedIn(List<V> theCollection) {
+            return theCollection.contains(collection.stream().findAny().orElse((U)new Object()));
+        }
+
+        public <V> boolean isNotIncludedIn(List<V> theCollection) {
+            return !isIncludedIn(theCollection);
+        }
     }
 
     public static class Get {
@@ -553,6 +563,9 @@ public class Ideaomatic {
 
     public static <T, U extends Collection<T>> CollectionHandler<U, T> _a (U collection) {
         return new CollectionHandler<>(collection);
+    }
+    public static <T, U extends Collection<T>> CollectionHandler<U, T> _a (T data) {
+        return new CollectionHandler(singletonList(data));
     }
     public static <T, U extends Collection<T>> CollectionHandler<U, T> newList () {
         return new CollectionHandler<>((U)new ArrayList<T>());
