@@ -98,6 +98,10 @@ public class Ideaomatic {
             return new DataHolder<>(modifier.apply(result));
         }
 
+        public <R> R _finally (Function<T, R> modifier) {
+            return modifier.apply(result);
+        }
+
         public DataHolder<T> modify (Consumer<T> modifier) {
             modifier.accept(result);
             return this;
@@ -454,7 +458,15 @@ public class Ideaomatic {
         }
     }
 
+    public static <T> T call (Supplier<T> theGeneratorCalled) {
+        return theGeneratorCalled.get();
+    }
+
     public static <T> T a (T value) {
+        return value;
+    }
+
+    public static <T> T to (T value) {
         return value;
     }
 
@@ -511,6 +523,10 @@ public class Ideaomatic {
     }
 
     public static <T, R> Function<T, R> withThe (Function<T, R> data) {
+        return data;
+    }
+
+    public static <T, R> Function<T, R> _apply (Function<T, R> data) {
         return data;
     }
 
