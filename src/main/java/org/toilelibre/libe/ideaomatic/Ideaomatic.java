@@ -551,6 +551,9 @@ public class Ideaomatic {
     public static <T> List<T> theList (T... containingExactly) {
         return Arrays.asList(containingExactly);
     }
+    public static <T> CollectionHandler<List<T>, T> _theList (T... containingExactly) {
+        return new CollectionHandler(Arrays.asList(containingExactly));
+    }
 
     public static <T, U extends Collection<T>> CollectionHandler<U, T> withTheList (T... containingExactly) {
         return new CollectionHandler(Arrays.asList(containingExactly));
