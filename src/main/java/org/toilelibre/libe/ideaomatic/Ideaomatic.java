@@ -510,6 +510,14 @@ public class Ideaomatic {
         return theResult;
     }
 
+    public static <T, R> Function<T, R> withThe (Function<T, R> data) {
+        return data;
+    }
+
+    public static <T> Consumer<T> withThe (Consumer<T> data) {
+        return data;
+    }
+
     public static <U extends Collection<T>, V extends Collection<R>, T, R> Function<U, V> forEach (Function<T, R> elementInTheCollection) {
         return collection -> (V)collection.stream().map(t -> elementInTheCollection.apply(t)).collect(Collectors.toList());
     }
