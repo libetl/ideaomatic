@@ -31,6 +31,7 @@ import static org.toilelibre.libe.ideaomatic.Ideaomatic.some;
 import static org.toilelibre.libe.ideaomatic.Ideaomatic.text;
 import static org.toilelibre.libe.ideaomatic.Ideaomatic.the;
 import static org.toilelibre.libe.ideaomatic.Ideaomatic.theList;
+import static org.toilelibre.libe.ideaomatic.Ideaomatic.theModifiableList;
 import static org.toilelibre.libe.ideaomatic.Ideaomatic.use;
 import static org.toilelibre.libe.ideaomatic.Ideaomatic.value;
 import static org.toilelibre.libe.ideaomatic.Ideaomatic.weHave;
@@ -141,6 +142,12 @@ public class Tests {
     public void intersection () {
         use(theList("A1", "A2", "C3", "C4")).alongWith(theList("B1", "B2", "C3", "C4")).to(Do::intersection)
                 .useTheResult().to(Do::println);
+    }
+
+    @Test
+    public void modifySomeObject () {
+        with(theModifiableList("A")).modifyIt().toDo(list -> list.add("B")).and().useTheResult().to(Do::println);
+        System.out.println(use(theList("A", "B")).toDo().size());
     }
 
     private String method (String arg0, Number arg1, boolean arg2, byte[] arg3) {

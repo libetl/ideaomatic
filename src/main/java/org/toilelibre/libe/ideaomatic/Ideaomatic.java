@@ -84,6 +84,23 @@ public class Ideaomatic {
         }
     }
 
+    public static class Modifier<T> {
+        private final T toBeModified;
+
+        public Modifier(T toBeModified) {
+            this.toBeModified = toBeModified;
+        }
+
+        public T toDo () {
+            return toBeModified;
+        }
+
+        public DataHolder<T> toDo (Consumer<T> _that) {
+            _that.accept(toBeModified);
+            return new DataHolder<>(toBeModified);
+        }
+    }
+
     public static class DataHolder<T> implements SomeLanguageElements<DataHolder<T>>, ResultLanguageElements<T> {
 
         private final T result;
@@ -107,6 +124,13 @@ public class Ideaomatic {
         public DataHolder<T> modify (Consumer<T> modifier) {
             modifier.accept(result);
             return this;
+        }
+        public Modifier<T> modifyIt() {
+            return new Modifier(result);
+        }
+
+        public T toDo () {
+            return result;
         }
 
         public <R> DataHolder<R> map (Function<T, R> modifier) {
@@ -245,6 +269,11 @@ public class Ideaomatic {
         public <U> BiInvocationHelper<T, U> and (U aSecondData) {
             return new BiInvocationHelper<>(data, aSecondData);
         }
+
+        public T toDo () {
+            return data;
+        }
+
     }
 
     public static class ElementAdder<T> implements SomeLanguageElements {
@@ -550,6 +579,10 @@ public class Ideaomatic {
 
     public static <T> List<T> theList (T... containingExactly) {
         return Arrays.asList(containingExactly);
+    }
+
+    public static <T> List<T> theModifiableList (T... containingExactly) {
+        return new ArrayList<>(theList(containingExactly));
     }
     public static <T> CollectionHandler<List<T>, T> _theList (T... containingExactly) {
         return new CollectionHandler(Arrays.asList(containingExactly));
