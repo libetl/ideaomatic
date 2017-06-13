@@ -3,7 +3,7 @@
     <groupId>org.toile-libre.libe</groupId>
     <artifactId>ideaomatic</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>pol</name>
+    <name>ideaomatic</name>
     <description>ideaomatic : write code in english language</description>
     <url>https://github.com/libetl/ideaomatic</url>
     <licenses>
