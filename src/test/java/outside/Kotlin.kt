@@ -11,7 +11,7 @@ class Kotlin {
             now use the text like letsSay
                     "My name is %s and I am %d years old" alongWith
                     { the text "Lily" } and
-                    { the number like letMeRemember 3 } toDo formatting then
+                    { a number like letMeRemember 3 } toDo formatting then
                     useTheResult _to displayInTheConsole
         }
     }
