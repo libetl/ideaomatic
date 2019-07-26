@@ -38,7 +38,7 @@ import static org.toilelibre.libe.ideaomatic.Ideaomatic.weHave;
 import static org.toilelibre.libe.ideaomatic.Ideaomatic.with;
 import static org.toilelibre.libe.ideaomatic.Ideaomatic.withTheList;
 
-public class Tests {
+public class Java {
 
     @Test
     public void simpleTest () {
