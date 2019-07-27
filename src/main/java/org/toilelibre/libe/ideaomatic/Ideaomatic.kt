@@ -4,7 +4,6 @@ import java.time.*
 import java.util.*
 import java.util.Collections.unmodifiableCollection
 import java.util.function.Predicate
-import kotlin.reflect.KFunction1
 
 object Ideaomatic {
 
@@ -183,34 +182,41 @@ object Ideaomatic {
 
         companion object {
 
-            @JvmStatic fun <T> formA(call: (T) -> Any?): (T) -> T {
+            @JvmStatic
+            fun <T> formA(call: (T) -> Any?): (T) -> T {
                 return _do(call)
             }
 
-            @JvmStatic fun <T> _do(call: (T) -> Any?): (T) -> T {
+            @JvmStatic
+            fun <T> _do(call: (T) -> Any?): (T) -> T {
                 return { data ->
                     call.invoke(data)
                     data
                 }
             }
 
-            @JvmStatic fun <T> silently(call: (T) -> Any?): (T) -> T {
+            @JvmStatic
+            fun <T> silently(call: (T) -> Any?): (T) -> T {
                 return _do(call)
             }
 
-            @JvmStatic fun <T> _for(t: T): T {
+            @JvmStatic
+            fun <T> _for(t: T): T {
                 return t
             }
 
-            @JvmStatic fun <T : (U) -> R, U, R> someFunctionFor(originTypeAs: Class<U>, andTargetTypeAs: Class<R>, withTheFollowingDefinition: T): T {
+            @JvmStatic
+            fun <T : (U) -> R, U, R> someFunctionFor(originTypeAs: Class<U>, andTargetTypeAs: Class<R>, withTheFollowingDefinition: T): T {
                 return withTheFollowingDefinition
             }
 
-            @JvmStatic fun <T> someFunctionFor(originTypeAs: Class<T>, withTheFollowingDefinition: (T) -> Any?): (T) -> Any? {
+            @JvmStatic
+            fun <T> someFunctionFor(originTypeAs: Class<T>, withTheFollowingDefinition: (T) -> Any?): (T) -> Any? {
                 return withTheFollowingDefinition
             }
 
-            @JvmStatic fun <T : MutableList<U>, U> someListOf(originTypeAs: Class<U>): Class<T> {
+            @JvmStatic
+            fun <T : MutableList<U>, U> someListOf(originTypeAs: Class<U>): Class<T> {
                 return MutableList::class.java as Class<T>
             }
         }
@@ -228,6 +234,8 @@ object Ideaomatic {
             thatCollection.add(element)
             return CollectionHandler(thatCollection)
         }
+
+        fun value() = element
     }
 
     class CollectionHandler<T : MutableCollection<U>, U>(private val collection: T) : SomeLanguageElements<CollectionHandler<T, U>>, ResultLanguageElements<MutableCollection<U>> {
@@ -522,8 +530,13 @@ object Ideaomatic {
     infix fun Ideaomatic.use(something: Int) = InvocationHelper(something)
     infix fun Ideaomatic.use(something: Boolean) = InvocationHelper(something)
     infix fun <T> Ideaomatic.use(something: T) = something
+    infix fun <T> Ideaomatic.add(something: () -> InvocationHelper<T>) = ElementAdder(something.invoke().toDo())
+    infix fun <T> CollectionHandler<MutableList<T>, T>.add(something: () -> InvocationHelper<T>) =
+            this.alsoAdd(something.invoke().toDo())
+
     val the get() = Ideaomatic
     val a get() = Ideaomatic
+    infix fun <T> Ideaomatic.listOf(type: Class<T>) = InvocationHelper(mutableListOf<T>())
     infix fun Ideaomatic.text(like: String) = InvocationHelper(like)
     infix fun Ideaomatic.text(like: Ideaomatic) = like
     infix fun Ideaomatic.number(like: Ideaomatic) = like
@@ -531,23 +544,46 @@ object Ideaomatic {
     infix fun <T> Ideaomatic.value(like: Ideaomatic) = like
     infix fun <T> Ideaomatic.value(like: T) = InvocationHelper(like)
     val like get() = Ideaomatic
+    infix fun <T> Ideaomatic.forExample(that: T) = InvocationHelper(that)
     infix fun <T> Ideaomatic.letsSay(mmmh: T) = InvocationHelper(mmmh)
     infix fun <T> Ideaomatic.letMeRemember(ohYes: T) = InvocationHelper(ohYes)
 
+    infix fun <T> T.and(anything: Ideaomatic) = this
+    infix fun <T> CollectionHandler<MutableList<T>, T>.andWithAll(anything: Ideaomatic) = InvocationHelper(this.value())
+
     infix fun <T, R> InvocationHelper<T>.toDo(operation: (Array<*>) -> R) = DataHolder(operation(arrayOf(toDo() as Any)))
+    infix fun <T, R> InvocationHelper<T>._do(operation: (Array<*>) -> R) = DataHolder(operation(arrayOf(toDo() as Any)))
     infix fun <T, U, R> BiInvocationHelper<T, U>.toDo(operation: (Array<*>) -> R) = DataHolder(operation(toDo()))
+    infix fun <T, U, R> BiInvocationHelper<T, U>._do(operation: (Array<*>) -> R) = DataHolder(operation(toDo()))
     infix fun <T, U, V, R> TriInvocationHelper<T, U, V>.toDo(operation: (Array<*>) -> R) = DataHolder(operation(toDo()))
+    infix fun <T, U, V, R> TriInvocationHelper<T, U, V>._do(operation: (Array<*>) -> R) = DataHolder(operation(toDo()))
     infix fun <T, U, V, W, R> QuadriInvocationHelper<T, U, V, W>.toDo(operation: (Array<*>) -> R) = DataHolder(operation(toDo()))
+    infix fun <T, U, V, W, R> QuadriInvocationHelper<T, U, V, W>._do(operation: (Array<*>) -> R) = DataHolder(operation(toDo()))
 
     infix fun <R> DataHolder<R>.then(afterThat: Ideaomatic) = this
     val useTheResult get() = Ideaomatic
+    val also get() = Ideaomatic
+    val ofThem get() = Ideaomatic
 
     infix fun <R> DataHolder<R>._to(_do: (R) -> Any?) = _do(value())
+    infix fun <T> ElementAdder<T>._to(theCollection: () -> InvocationHelper<MutableList<T>>) =
+            CollectionHandler(theCollection.invoke().toDo().apply { add(value()) })
+
     val displayInTheConsole = { T: Any? -> System.out.println(T) }
 
     val formatting = { parameters: Array<*> ->
         String.format(parameters[0].toString(), *parameters.drop(1).toTypedArray())
     }
+
+    val concatenation = { parameters: Array<*> ->
+        parameters.flatMap {
+            when (it) {
+                is Collection<*> -> it.toList()
+                else             -> listOf(it)
+            }
+        }
+    }
+
 
     @JvmStatic
     fun <T> use(that: T): InvocationHelper<T> {
@@ -650,4 +686,7 @@ object Ideaomatic {
     val <T> T.now get() = this
 
     fun `tell me`(now: Ideaomatic.() -> Unit) = now(Ideaomatic)
+
+    fun so(now: Ideaomatic.() -> Unit) = now(Ideaomatic)
+
 }
