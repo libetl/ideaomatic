@@ -1,9 +1,12 @@
 package org.toilelibre.libe.ideaomatic
 
+import org.toilelibre.libe.ideaomatic.Ideaomatic._with
 import java.time.*
 import java.util.*
 import java.util.Collections.unmodifiableCollection
 import java.util.function.Predicate
+import kotlin.reflect.KFunction
+import kotlin.reflect.jvm.jvmErasure
 
 object Ideaomatic {
 
@@ -307,12 +310,12 @@ object Ideaomatic {
 
         @JvmStatic
         fun aDateTime(localDate: LocalDate, hours: Int?, minutes: Int?): LocalDateTime {
-            return aDateTime(localDate, hours!!, minutes!!, 0)
+            return aDateTimeWithSeconds(localDate, hours!!, minutes!!, 0)
         }
 
         @JvmOverloads
         @JvmStatic
-        fun aDateTime(localDate: LocalDate, hours: Int, minutes: Int, seconds: Int, nanoseconds: Int = 0): LocalDateTime {
+        fun aDateTimeWithSeconds(localDate: LocalDate, hours: Int, minutes: Int, seconds: Int, nanoseconds: Int = 0): LocalDateTime {
             return localDate.atTime(hours, minutes, seconds, nanoseconds)
         }
 
@@ -541,24 +544,51 @@ object Ideaomatic {
     infix fun Ideaomatic.text(like: Ideaomatic) = like
     infix fun Ideaomatic.number(like: Ideaomatic) = like
     infix fun Ideaomatic.number(like: Int) = InvocationHelper(like)
-    infix fun <T> Ideaomatic.value(like: Ideaomatic) = like
+    infix fun Ideaomatic.value(like: Ideaomatic) = like
+    infix fun Ideaomatic.letsSay(mmmh: Ideaomatic) = mmmh
     infix fun <T> Ideaomatic.value(like: T) = InvocationHelper(like)
     val like get() = Ideaomatic
+    val mmmh get() = Ideaomatic
     infix fun <T> Ideaomatic.forExample(that: T) = InvocationHelper(that)
     infix fun <T> Ideaomatic.letsSay(mmmh: T) = InvocationHelper(mmmh)
     infix fun <T> Ideaomatic.letMeRemember(ohYes: T) = InvocationHelper(ohYes)
+    infix fun <T> Ideaomatic.ohYes(ohYes: T) = InvocationHelper(ohYes)
 
     infix fun <T> T.and(anything: Ideaomatic) = this
     infix fun <T> CollectionHandler<MutableList<T>, T>.andWithAll(anything: Ideaomatic) = InvocationHelper(this.value())
 
+    infix fun <T, R> InvocationHelper<T>.__to(operation: KFunction<R>) = DataHolder(operation.call(toDo()))
+    infix fun <T, R> InvocationHelper<T>._to(operation: (Array<*>) -> R) = DataHolder(operation(arrayOf(toDo() as Any)))
+    infix fun <T, R> InvocationHelper<T>._toDo(operation: KFunction<R>) = DataHolder(operation.call(toDo()))
     infix fun <T, R> InvocationHelper<T>.toDo(operation: (Array<*>) -> R) = DataHolder(operation(arrayOf(toDo() as Any)))
+    infix fun <T, R> InvocationHelper<T>.__do(operation: KFunction<R>) = DataHolder(operation.call(toDo()))
     infix fun <T, R> InvocationHelper<T>._do(operation: (Array<*>) -> R) = DataHolder(operation(arrayOf(toDo() as Any)))
+    infix fun <T, U, R> BiInvocationHelper<T, U>.__to(operation: KFunction<R>) = callAndTweakVarargs(toDo(), operation)
+    infix fun <T, U, R> BiInvocationHelper<T, U>._to(operation: (Array<*>) -> R) = DataHolder(operation(toDo()))
+    infix fun <T, U, R> BiInvocationHelper<T, U>._toDo(operation: KFunction<R>) = callAndTweakVarargs(toDo(), operation)
     infix fun <T, U, R> BiInvocationHelper<T, U>.toDo(operation: (Array<*>) -> R) = DataHolder(operation(toDo()))
+    infix fun <T, U, R> BiInvocationHelper<T, U>.__do(operation: KFunction<R>) = callAndTweakVarargs(toDo(), operation)
     infix fun <T, U, R> BiInvocationHelper<T, U>._do(operation: (Array<*>) -> R) = DataHolder(operation(toDo()))
+    infix fun <T, U, V, R> TriInvocationHelper<T, U, V>.__to(operation: KFunction<R>) = callAndTweakVarargs(toDo(), operation)
+    infix fun <T, U, V, R> TriInvocationHelper<T, U, V>._to(operation: (Array<*>) -> R) = DataHolder(operation(toDo()))
     infix fun <T, U, V, R> TriInvocationHelper<T, U, V>.toDo(operation: (Array<*>) -> R) = DataHolder(operation(toDo()))
+    infix fun <T, U, V, R> TriInvocationHelper<T, U, V>._toDo(operation: KFunction<R>) = callAndTweakVarargs(toDo(), operation)
     infix fun <T, U, V, R> TriInvocationHelper<T, U, V>._do(operation: (Array<*>) -> R) = DataHolder(operation(toDo()))
+    infix fun <T, U, V, R> TriInvocationHelper<T, U, V>.__do(operation: KFunction<R>) = callAndTweakVarargs(toDo(), operation)
+    infix fun <T, U, V, W, R> QuadriInvocationHelper<T, U, V, W>.__to(operation: KFunction<R>) = callAndTweakVarargs(toDo(), operation)
+    infix fun <T, U, V, W, R> QuadriInvocationHelper<T, U, V, W>._to(operation: (Array<*>) -> R) = DataHolder(operation(toDo()))
+    infix fun <T, U, V, W, R> QuadriInvocationHelper<T, U, V, W>._toDo(operation: KFunction<R>) = callAndTweakVarargs(toDo(), operation)
     infix fun <T, U, V, W, R> QuadriInvocationHelper<T, U, V, W>.toDo(operation: (Array<*>) -> R) = DataHolder(operation(toDo()))
+    infix fun <T, U, V, W, R> QuadriInvocationHelper<T, U, V, W>.__do(operation: KFunction<R>) = callAndTweakVarargs(toDo(), operation)
     infix fun <T, U, V, W, R> QuadriInvocationHelper<T, U, V, W>._do(operation: (Array<*>) -> R) = DataHolder(operation(toDo()))
+
+    private fun <R> callAndTweakVarargs(value: Array<*>, operation: KFunction<R>) =
+            if(operation.parameters.size == 1 && operation.parameters[0].isVararg)
+                DataHolder(operation.call((java.lang.reflect.Array.newInstance(operation.parameters[0].type.jvmErasure.java.componentType,
+                                                                          value.size) as Array<Any?>).apply {
+                    System.arraycopy(value, 0, this, 0, value.size)
+                }))
+            else DataHolder(operation.call(*value))
 
     infix fun <R> DataHolder<R>.then(afterThat: Ideaomatic) = this
     val useTheResult get() = Ideaomatic
@@ -566,6 +596,16 @@ object Ideaomatic {
     val ofThem get() = Ideaomatic
 
     infix fun <R> DataHolder<R>._to(_do: (R) -> Any?) = _do(value())
+
+    infix fun <T, U> DataHolder<T>.with(anotherThing: () -> InvocationHelper<U>) = BiInvocationHelper(this.value(), anotherThing.invoke().toDo())
+    infix fun <T, U> DataHolder<T>.alongWith(anotherThing: () -> InvocationHelper<U>) = BiInvocationHelper(this.value(), anotherThing.invoke().toDo())
+    infix fun <T, U, V> DataHolder<T>._with(anotherThing: () -> BiInvocationHelper<U, V>) = anotherThing.invoke().let { TriInvocationHelper(this.value(), it.toDo()[0] as U, it.toDo()[1] as V) }
+    infix fun <T, U, V> DataHolder<T>._alongWith(anotherThing: () -> BiInvocationHelper<U, V>) = anotherThing.invoke().let { TriInvocationHelper(this.value(), it.toDo()[0] as U, it.toDo()[1] as V) }
+    infix fun <T, U, V, W> DataHolder<T>.__with(anotherThing: () -> TriInvocationHelper<U, V, W>) = anotherThing.invoke().let {
+        QuadriInvocationHelper(this.value(), it.toDo()[0] as U, it.toDo()[1] as V, it.toDo()[2] as W) }
+    infix fun <T, U, V, W> DataHolder<T>.__alongWith(anotherThing: () -> TriInvocationHelper<U, V, W>) = anotherThing.invoke().let {
+        QuadriInvocationHelper(this.value(), it.toDo()[0] as U, it.toDo()[1] as V, it.toDo()[2] as W) }
+
     infix fun <T> ElementAdder<T>._to(theCollection: () -> InvocationHelper<MutableList<T>>) =
             CollectionHandler(theCollection.invoke().toDo().apply { add(value()) })
 
@@ -685,8 +725,12 @@ object Ideaomatic {
 
     val <T> T.now get() = this
 
+    val <T> T.please get() = this
+
     fun `tell me`(now: Ideaomatic.() -> Unit) = now(Ideaomatic)
 
     fun so(now: Ideaomatic.() -> Unit) = now(Ideaomatic)
+
+    fun ok(now: Ideaomatic.() -> Unit) = now(Ideaomatic)
 
 }
