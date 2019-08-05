@@ -1,11 +1,11 @@
 package outside
 
 import org.junit.Test
-import org.toilelibre.libe.ideaomatic.Ideaomatic
 import org.toilelibre.libe.ideaomatic.Ideaomatic.Do
 import org.toilelibre.libe.ideaomatic.Ideaomatic.Get
 import org.toilelibre.libe.ideaomatic.Ideaomatic.`tell me`
 import org.toilelibre.libe.ideaomatic.Ideaomatic.ok
+import org.toilelibre.libe.ideaomatic.Ideaomatic.`ok, now`
 import org.toilelibre.libe.ideaomatic.Ideaomatic.so
 import java.time.ZoneOffset
 
@@ -47,13 +47,22 @@ class Kotlin {
         }
     }
 
-
     @Test
     fun joinText() {
         ok {
             now use the text "This text " alongWith { the text "will be displayed " } alongWith { the text "as one" } __to Do::join then
                     useTheResult _to displayInTheConsole
 
+        }
+    }
+
+    fun method (arg0: String, arg1: Number, arg2: Boolean, arg3: Array<Byte>) =
+        arg0 + arg1 + arg2 + arg3.toString()
+    @Test
+    fun fourArgsCall () {
+        `ok, now` {
+            please use the text "a" alongWith { the number 1 } and also with SOMETHING_TRUE and also _with { arrayOf<Byte>(0, 1, 0).injected } __to
+                    ::method then useTheResult _to displayInTheConsole
         }
     }
 }
