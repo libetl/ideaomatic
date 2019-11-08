@@ -183,6 +183,12 @@ object Ideaomatic {
             return data
         }
 
+        infix fun isNotIncludedIn(listProvider : () -> List<T>)=
+                !isIncludedIn(listProvider)
+
+        infix fun isIncludedIn(listProvider : () -> List<T>)=
+                listProvider.invoke().contains(data)
+
         companion object {
 
             @JvmStatic
@@ -258,6 +264,9 @@ object Ideaomatic {
             return alsoAdd(thisOtherElement)
         }
 
+        infix fun `is`(predicate: (T) -> Boolean) = predicate(this.collection)
+        infix fun `isNot`(predicate: (T) -> Boolean) = !`is`(predicate)
+
         fun useThatAll(): InvocationHelper<T> {
             return InvocationHelper(collection)
         }
@@ -274,7 +283,7 @@ object Ideaomatic {
             return this.collection.contains(thisElement)
         }
 
-        fun doesNotContain(thisElement: U): Boolean {
+        infix fun doesNotContain(thisElement: U): Boolean {
             return !this.contains(thisElement)
         }
 
@@ -289,6 +298,7 @@ object Ideaomatic {
         fun <V> isNotIncludedIn(theCollection: List<V>): Boolean {
             return !isIncludedIn(theCollection)
         }
+
     }
 
     object Get {
@@ -521,9 +531,13 @@ object Ideaomatic {
         return number as Int
     }
 
+    infix fun <T> InvocationHelper<T>.`is`(predicate: (T) -> Boolean) = predicate(this.toDo())
+    infix fun <T> InvocationHelper<T>.`isNot`(predicate: (T) -> Boolean) = !`is`(predicate)
+    val empty get() : (Collection<*>) -> Boolean = { it.isEmpty() }
     infix fun <T, U> InvocationHelper<T>._with(somethingElse: U) = this.and(somethingElse)
     infix fun <T, U> InvocationHelper<T>.alongWith(somethingElse: U) = this.and(somethingElse)
     infix fun <T, U> InvocationHelper<T>.alongWith(somethingElse: () -> InvocationHelper<U>) = this.and(somethingElse.invoke().toDo())
+    infix fun <T : List<*>, U> InvocationHelper<T>.__with(somethingElse: () -> InvocationHelper<U>) = CollectionHandler<MutableCollection<Any>, Any>(mutableListOf(this.toDo(), somethingElse.invoke().toDo() as Any))
     infix fun <T, U> InvocationHelper<T>.with(somethingElse: U) = this.and(somethingElse)
     infix fun <T, U> InvocationHelper<T>._with(somethingElse: () -> InvocationHelper<U>) = this.and(somethingElse.invoke().toDo())
     infix fun <T, U> InvocationHelper<T>.and(somethingElse: U) = this.and(somethingElse)
@@ -747,6 +761,8 @@ object Ideaomatic {
     fun so(now: Ideaomatic.() -> Unit) = now(Ideaomatic)
 
     fun ok(now: Ideaomatic.() -> Unit) = now(Ideaomatic)
+
+    fun well(now: Ideaomatic.() -> Unit) = now(Ideaomatic)
 
     fun `ok, now`(now: Ideaomatic.() -> Unit) = now(Ideaomatic)
 

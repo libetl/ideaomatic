@@ -1,12 +1,14 @@
 package outside
 
+import org.junit.Assert.fail
 import org.junit.Test
 import org.toilelibre.libe.ideaomatic.Ideaomatic.Do
 import org.toilelibre.libe.ideaomatic.Ideaomatic.Get
+import org.toilelibre.libe.ideaomatic.Ideaomatic.`ok, now`
 import org.toilelibre.libe.ideaomatic.Ideaomatic.`tell me`
 import org.toilelibre.libe.ideaomatic.Ideaomatic.ok
-import org.toilelibre.libe.ideaomatic.Ideaomatic.`ok, now`
 import org.toilelibre.libe.ideaomatic.Ideaomatic.so
+import org.toilelibre.libe.ideaomatic.Ideaomatic.well
 import java.time.ZoneOffset
 
 class Kotlin {
@@ -63,6 +65,27 @@ class Kotlin {
         `ok, now` {
             please use the text "a" alongWith { the number 1 } and also with SOMETHING_TRUE and also _with { arrayOf<Byte>(0, 1, 0).injected } __to
                     ::method then useTheResult _to displayInTheConsole
+        }
+    }
+
+    @Test
+    fun reverseListConditionChecksForBetterReadability() {
+        well {
+            if (a listOf TEXTS isNot empty) {
+                fail()
+            }
+
+            if (a listOf TEXTS __with { the text "An element" } `is` empty) {
+                fail()
+            }
+
+            if (a listOf TEXTS __with { the text "An element" } doesNotContain "An element") {
+                fail()
+            }
+
+            if (the text "foo" isNotIncludedIn { theList("foo", "bar") }) {
+                fail()
+            }
         }
     }
 }
