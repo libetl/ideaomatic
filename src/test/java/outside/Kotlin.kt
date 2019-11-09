@@ -2,14 +2,11 @@ package outside
 
 import org.junit.Assert.fail
 import org.junit.Test
-import org.toilelibre.libe.ideaomatic.Ideaomatic.Do
-import org.toilelibre.libe.ideaomatic.Ideaomatic.Get
 import org.toilelibre.libe.ideaomatic.Ideaomatic.`ok, now`
 import org.toilelibre.libe.ideaomatic.Ideaomatic.`tell me`
 import org.toilelibre.libe.ideaomatic.Ideaomatic.ok
 import org.toilelibre.libe.ideaomatic.Ideaomatic.so
 import org.toilelibre.libe.ideaomatic.Ideaomatic.well
-import java.time.ZoneOffset
 
 class Kotlin {
 
@@ -39,11 +36,11 @@ class Kotlin {
     @Test
     fun buildLocalDateTime() {
         ok {
-            please use a number like forExample 2018 __to Get::aYear and also with
-                    { a number like letMeRemember 3 } __do Get::aYearMonth and also with
-                    { a number like letsSay mmmh ohYes 3 } __do Get::aDate and also _with
-                    { the number 14 and { the number 25 } } __do Get::aDateTime then
-                    useTheResult alongWith { the value ZoneOffset.ofHours(2) } __to Get::aDateTimeWithTimezone then
+            please use a number like forExample 2018 __to `get`::aYear and also with
+                    { a number like letMeRemember 3 } __do `get`::aYearMonth and also with
+                    { a number like letsSay mmmh ohYes 3 } __do `get`::aDate and also _with
+                    { the number 14 and { the number 25 } } __do `get`::aDateTime then
+                    useTheResult alongWith { the number 2 } __to `get`::aDateTimeWithTimezone then
                     useTheResult _to displayInTheConsole
 
         }
@@ -52,7 +49,8 @@ class Kotlin {
     @Test
     fun joinText() {
         ok {
-            now use the text "This text " alongWith { the text "will be displayed " } alongWith { the text "as one" } __to Do::join then
+            now use the text "This text " alongWith { the text "will be displayed " } alongWith
+                    { the text "as one" } __to `do`::join then
                     useTheResult _to displayInTheConsole
 
         }
@@ -86,6 +84,15 @@ class Kotlin {
             if (the text "foo" isNotIncludedIn { theList("foo", "bar") }) {
                 fail()
             }
+        }
+    }
+
+    @Test
+    fun mergeTwoLists() {
+        ok {
+            now use a listOf TEXTS __with { some text "First List Element" } _alongWith
+                    { a listOf TEXTS __with { some text "Second List Element" } } andWithAll
+                    ofThem _do merge then useTheResult _to displayInTheConsole
         }
     }
 }

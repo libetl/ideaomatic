@@ -4,6 +4,7 @@ import org.toilelibre.libe.ideaomatic.Ideaomatic._with
 import java.time.*
 import java.util.*
 import java.util.Collections.unmodifiableCollection
+import java.util.Collections.unmodifiableList
 import java.util.function.Predicate
 import kotlin.reflect.KFunction
 import kotlin.reflect.jvm.jvmErasure
@@ -206,7 +207,7 @@ object Ideaomatic {
 
             @JvmStatic
             fun <T> silently(call: (T) -> Any?): (T) -> T {
-                return _do(call)
+                return _do(call) as (T) -> T
             }
 
             @JvmStatic
@@ -233,13 +234,13 @@ object Ideaomatic {
     }
 
     class ElementAdder<T>(private val element: T) : SomeLanguageElements<Any> {
-        fun to(thatCollection: () -> MutableCollection<T>): CollectionHandler<MutableCollection<T>, T> {
+        fun to(thatCollection: () -> MutableList<T>): CollectionHandler<MutableList<T>, T> {
             val collection = thatCollection.invoke()
             collection.add(element)
             return CollectionHandler(collection)
         }
 
-        fun to(thatCollection: MutableCollection<T>): CollectionHandler<MutableCollection<T>, T> {
+        fun to(thatCollection: MutableList<T>): CollectionHandler<MutableList<T>, T> {
             thatCollection.add(element)
             return CollectionHandler(thatCollection)
         }
@@ -247,7 +248,7 @@ object Ideaomatic {
         fun value() = element
     }
 
-    class CollectionHandler<T : MutableCollection<U>, U>(private val collection: T) : SomeLanguageElements<CollectionHandler<T, U>>, ResultLanguageElements<MutableCollection<U>> {
+    class CollectionHandler<T : MutableList<U>, U>(private val collection: T) : SomeLanguageElements<CollectionHandler<T, U>>, ResultLanguageElements<MutableList<U>> {
 
         val isEmpty: Boolean
             get() = this.collection.isEmpty()
@@ -271,8 +272,8 @@ object Ideaomatic {
             return InvocationHelper(collection)
         }
 
-        override fun value(): MutableCollection<U> {
-            return unmodifiableCollection(collection)
+        override fun value(): MutableList<U> {
+            return unmodifiableList(collection)
         }
 
         fun hasSize(ofExactly: Int): Boolean {
@@ -298,6 +299,12 @@ object Ideaomatic {
         fun <V> isNotIncludedIn(theCollection: List<V>): Boolean {
             return !isIncludedIn(theCollection)
         }
+
+        infix fun <V> alongWith(that: () -> InvocationHelper<V>): BiInvocationHelper<T, V> =
+                BiInvocationHelper(this.collection, that.invoke() as V)
+
+        infix fun <V: MutableList<W>, W> _alongWith(that: () -> CollectionHandler<V, W>): BiInvocationHelper<T, V> =
+                BiInvocationHelper(this.collection, that.invoke().collection)
 
     }
 
@@ -330,15 +337,15 @@ object Ideaomatic {
         }
 
         @JvmStatic
-        fun aDateTimeWithTimezone(localDateTime: LocalDateTime, zoneOffset: ZoneOffset): OffsetDateTime {
-            return localDateTime.atOffset(zoneOffset)
+        fun aDateTimeWithTimezone(localDateTime: LocalDateTime, zoneOffset: Int): OffsetDateTime {
+            return localDateTime.atOffset(ZoneOffset.ofHours(2))
         }
     }
 
     object Do {
 
         @JvmStatic
-        fun <T> concatenation(list: MutableCollection<T>, element: T): Collection<T> {
+        fun <T> concatenation(list: MutableList<T>, element: T): Collection<T> {
             list.add(element)
             return list
         }
@@ -349,7 +356,7 @@ object Ideaomatic {
         }
 
         @JvmStatic
-        fun <T : MutableCollection<U>, U> merge(firstCollection: CollectionHandler<T, U>, secondCollection: CollectionHandler<T, U>): T {
+        fun <T : MutableList<U>, U> merge(firstCollection: CollectionHandler<T, U>, secondCollection: CollectionHandler<T, U>): T {
             return (firstCollection.value() + secondCollection.value()).toMutableList() as T
         }
 
@@ -537,7 +544,8 @@ object Ideaomatic {
     infix fun <T, U> InvocationHelper<T>._with(somethingElse: U) = this.and(somethingElse)
     infix fun <T, U> InvocationHelper<T>.alongWith(somethingElse: U) = this.and(somethingElse)
     infix fun <T, U> InvocationHelper<T>.alongWith(somethingElse: () -> InvocationHelper<U>) = this.and(somethingElse.invoke().toDo())
-    infix fun <T : List<*>, U> InvocationHelper<T>.__with(somethingElse: () -> InvocationHelper<U>) = CollectionHandler<MutableCollection<Any>, Any>(mutableListOf(this.toDo(), somethingElse.invoke().toDo() as Any))
+    infix fun <T : List<*>, U> InvocationHelper<T>.__with(somethingElse: () -> InvocationHelper<U>) =
+            CollectionHandler<MutableList<Any>, Any>(((this.toDo() as MutableList<Any>) + mutableListOf(somethingElse.invoke().toDo() as Any)).toMutableList())
     infix fun <T, U> InvocationHelper<T>.with(somethingElse: U) = this.and(somethingElse)
     infix fun <T, U> InvocationHelper<T>._with(somethingElse: () -> InvocationHelper<U>) = this.and(somethingElse.invoke().toDo())
     infix fun <T, U> InvocationHelper<T>.and(somethingElse: U) = this.and(somethingElse)
@@ -581,10 +589,12 @@ object Ideaomatic {
 
     infix fun <T, U, V> BiInvocationHelper<T, U>.and(somethingElse: V) = this.and(somethingElse)
     infix fun <T, U, V> BiInvocationHelper<T, U>.and(somethingElse: () -> InvocationHelper<V>) = this.and(somethingElse.invoke().toDo())
+    infix fun <T, U> BiInvocationHelper<T, U>.andWithAll(anything: Ideaomatic) = this
     infix fun <T, U, V> TriInvocationHelper<T, U, V>.and(somethingElse: () -> InvocationHelper<V>) = this.and(somethingElse.invoke().toDo())
     infix fun <T> InvocationHelper<T>.and(also: Ideaomatic) = this
     infix fun <T, U> BiInvocationHelper<T, U>.and(also: Ideaomatic) = this
     infix fun <T, U, V> TriInvocationHelper<T, U, V>.and(also: Ideaomatic) = this
+    infix fun <T, U, V> TriInvocationHelper<T, U, V>.andWithAll(also: Ideaomatic) = this
     infix fun <T, R> InvocationHelper<T>.__to(operation: KFunction<R>) = DataHolder(operation.call(toDo()))
     infix fun <T, R> InvocationHelper<T>._to(operation: (Array<*>) -> R) = DataHolder(operation(arrayOf(toDo() as Any)))
     infix fun <T, R> InvocationHelper<T>._toDo(operation: KFunction<R>) = DataHolder(operation.call(toDo()))
@@ -609,6 +619,7 @@ object Ideaomatic {
     infix fun <T, U, V, W, R> QuadriInvocationHelper<T, U, V, W>.toDo(operation: (Array<*>) -> R) = DataHolder(operation(toDo()))
     infix fun <T, U, V, W, R> QuadriInvocationHelper<T, U, V, W>.__do(operation: KFunction<R>) = callAndTweakVarargs(toDo(), operation)
     infix fun <T, U, V, W, R> QuadriInvocationHelper<T, U, V, W>._do(operation: (Array<*>) -> R) = DataHolder(operation(toDo()))
+    infix fun <T, U, V, W, R> QuadriInvocationHelper<T, U, V, W>.andWithAll(also: Ideaomatic) = this
     val <T> T.injected get() = InvocationHelper(this)
 
     private fun <R> callAndTweakVarargs(value: Array<*>, operation: KFunction<R>) =
@@ -653,6 +664,12 @@ object Ideaomatic {
         }
     }
 
+    val merge = { parameters: Array<*> ->
+        (parameters.filter { it is List<*> } as List<List<*>>).flatten()
+    }
+
+    val `do` = Do
+    val get = Get
 
     @JvmStatic
     fun <T> use(that: T): InvocationHelper<T> {
@@ -700,7 +717,7 @@ object Ideaomatic {
     }
 
     @JvmStatic
-    fun <T, U : MutableCollection<T>> withTheList(vararg containingExactly: T): CollectionHandler<U, T> {
+    fun <T, U : MutableList<T>> withTheList(vararg containingExactly: T): CollectionHandler<U, T> {
         return CollectionHandler(mutableListOf(*containingExactly) as U)
     }
 
@@ -711,22 +728,22 @@ object Ideaomatic {
 
 
     @JvmStatic
-    fun <T, U : MutableCollection<T>> _a(collection: U): CollectionHandler<U, T> {
+    fun <T, U : MutableList<T>> _a(collection: U): CollectionHandler<U, T> {
         return CollectionHandler(collection)
     }
 
     @JvmStatic
-    fun <T, U : MutableCollection<T>> _a(data: T): CollectionHandler<U, T> {
+    fun <T, U : MutableList<T>> _a(data: T): CollectionHandler<U, T> {
         return CollectionHandler(mutableListOf<T>(data) as U)
     }
 
     @JvmStatic
-    fun <T, U : MutableCollection<T>> newList(): CollectionHandler<U, T> {
+    fun <T, U : MutableList<T>> newList(): CollectionHandler<U, T> {
         return CollectionHandler(ArrayList<T>() as U)
     }
 
     @JvmStatic
-    fun <T, U : MutableCollection<T>> newListOf(thisClass: Class<T>): CollectionHandler<U, T> {
+    fun <T, U : MutableList<T>> newListOf(thisClass: Class<T>): CollectionHandler<U, T> {
         return newList()
     }
 

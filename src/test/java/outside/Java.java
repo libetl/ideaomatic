@@ -67,7 +67,7 @@ public class Java {
                 .and().useTheResult().alongWith(the(value(8))).to(Get::aYearMonth)
                 .and().useTheResult().alongWith(the(value(23))).to(Get::aDate)
                 .and().useTheResult().alongWith(the(value(14))).and(the(value(25))).to(Get::aDateTime)
-                .and().useTheResult().alongWith(the(ZoneOffset.ofHours(2))).to(Get::aDateTimeWithTimezone).ok();
+                .and().useTheResult().alongWith(the(value(2))).to(Get::aDateTimeWithTimezone).ok();
         System.out.println(offsetDateTime);
     }
 
